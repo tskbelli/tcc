@@ -37,6 +37,19 @@ a:hover { color: var(--verde); }
 }
 
 .navbar-brand { color: var(--texto) !important; }
+.logo-cabecalho {
+    display: block;
+    width: auto;
+    height: 54px;
+    object-fit: contain;
+}
+
+.logo-principal {
+    display: block;
+    width: min(100%, 460px);
+    height: auto;
+    object-fit: contain;
+}
 .navbar-toggler { border-color: var(--borda); }
 .navbar-toggler-icon { filter: invert(1); }
 .nav-link { color: #d8dfdc !important; font-weight: 600; font-size: .94rem; }
@@ -168,6 +181,8 @@ a:hover { color: var(--verde); }
 }
 
 @media (max-width: 575.98px) {
+    .logo-cabecalho { height: 44px; }
+    .logo-principal { width: min(100%, 360px); }
     .catalogo-topo .display-4, .detalhe-hero .display-4 { font-size: 2.2rem; }
     .historico-card, .moderacao-card { align-items: flex-start; flex-direction: column; }
     .perfil-cabecalho { align-items: flex-start; }
