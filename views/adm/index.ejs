@@ -1,0 +1,21 @@
+<%- include('cabecalho.ejs', { tituloPagina: 'Painel' }) %>
+
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div><span class="eyebrow">Visão geral</span><h1 class="h2 mb-0">Painel administrativo</h1><p class="text-secondary mb-0">Gerencie o conteúdo e a comunidade do IFCine.</p></div>
+    <a class="btn btn-ifcine" href="/adm/filme/add"><i class="bi bi-plus-lg"></i> Novo filme</a>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-6 col-lg-3"><div class="stat-card"><i class="bi bi-collection-play"></i><strong><%= totais.filmes %></strong><span>Filmes cadastrados</span></div></div>
+    <div class="col-6 col-lg-3"><div class="stat-card"><i class="bi bi-eye"></i><strong><%= totais.filmesAtivos %></strong><span>Filmes ativos</span></div></div>
+    <div class="col-6 col-lg-3"><div class="stat-card"><i class="bi bi-people"></i><strong><%= totais.usuarios %></strong><span>Usuários</span></div></div>
+    <div class="col-6 col-lg-3"><div class="stat-card"><i class="bi bi-star"></i><strong><%= totais.avaliacoes %></strong><span>Avaliações</span></div></div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4"><a class="atalho-admin" href="/adm/filme/lst"><i class="bi bi-film"></i><div><strong>Gerenciar filmes</strong><span>Cadastre, edite, ative ou exclua.</span></div><i class="bi bi-arrow-right"></i></a></div>
+    <div class="col-md-4"><a class="atalho-admin" href="/adm/usuario/lst"><i class="bi bi-people"></i><div><strong>Gerenciar usuários</strong><span>Controle contas e permissões.</span></div><i class="bi bi-arrow-right"></i></a></div>
+    <div class="col-md-4"><a class="atalho-admin" href="/adm/avaliacao/lst"><i class="bi bi-chat-square-text"></i><div><strong>Moderar avaliações</strong><span>Publique, oculte ou exclua.</span></div><i class="bi bi-arrow-right"></i></a></div>
+</div>
+
+<%- include('rodape.ejs') %>

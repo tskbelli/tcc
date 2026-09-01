@@ -1,0 +1,29 @@
+{
+  "name": "ifcine",
+  "version": "1.0.0",
+  "description": "Catálogo de filmes com avaliações e área administrativa",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "node --test",
+    "check": "node scripts/verificarCodigo.js",
+    "criar-admin": "node scripts/criarAdmin.js",
+    "popular-banco": "node scripts/popularBanco.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "connect-mongo": "^5.1.0",
+    "dotenv": "^17.2.2",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-session": "^1.18.2",
+    "mongoose": "^8.18.0",
+    "multer": "^2.0.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "ISC"
+}

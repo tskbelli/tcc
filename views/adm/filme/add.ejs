@@ -1,0 +1,4 @@
+<%- include('../cabecalho.ejs', { tituloPagina: 'Novo filme' }) %>
+<div class="mb-4"><span class="eyebrow">Catálogo</span><h1 class="h2 mb-0">Cadastrar filme</h1><p class="text-secondary">Adicione as informações e o link externo da produção.</p></div>
+<%- include('form.ejs', { acao: '/adm/filme/add', filme }) %>
+<%- include('../rodape.ejs') %>

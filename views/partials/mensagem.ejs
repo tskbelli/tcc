@@ -1,0 +1,8 @@
+<% if (mensagem) { %>
+    <div class="container pt-3">
+        <div class="alert alert-<%= mensagem.tipo %> alert-dismissible fade show" role="alert">
+            <%= mensagem.texto %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+        </div>
+    </div>
+<% } %>

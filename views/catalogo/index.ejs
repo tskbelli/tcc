@@ -1,0 +1,82 @@
+<%- include('cabecalho.ejs', { tituloPagina: 'Catálogo' }) %>
+
+<section class="catalogo-topo">
+    <div class="container py-5">
+        <div class="row align-items-end g-4">
+            <div class="col-lg-6">
+                <span class="eyebrow"></span>
+                <h1 class="display-4 fw-bold mt-2">IFCine</h1>
+                <p class="lead text-secondary mb-0">acervo de curtas metragens academicos</p>
+            </div>
+            <div class="col-lg-6">
+                <form action="/" method="get" class="busca-catalogo">
+                    <div class="row g-2">
+                        <div class="col-md-7">
+                            <label class="visually-hidden" for="busca">Título do filme</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                <input id="busca" type="search" name="busca" value="<%= busca %>" class="form-control" placeholder="Pesquisar pelo título">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="visually-hidden" for="genero">Gênero</label>
+                            <select id="genero" name="genero" class="form-select">
+                                <option value="">Todos os gêneros</option>
+                                <% for (const item of generos) { %>
+                                    <option value="<%= item %>" <%= genero === item ? 'selected' : '' %>><%= item %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-grid"><button class="btn btn-ifcine" type="submit">Buscar</button></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <span class="eyebrow">Em cartaz</span>
+            <h2 class="h3 mb-0"><%= filmes.length %> filme<%= filmes.length === 1 ? '' : 's' %> encontrado<%= filmes.length === 1 ? '' : 's' %></h2>
+        </div>
+        <% if (busca || genero) { %><a class="link-verde" href="/">Limpar filtros</a><% } %>
+    </div>
+
+    <% if (!filmes.length) { %>
+        <div class="estado-vazio">
+            <i class="bi bi-camera-reels"></i>
+            <h3>Nenhum filme encontrado</h3>
+            <p>Tente outro título ou escolha um gênero diferente.</p>
+        </div>
+    <% } %>
+
+    <div class="row g-4">
+        <% for (const filme of filmes) { const resumo = avaliacoes[filme.id]; %>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <article class="filme-card h-100">
+                    <a href="/filmes/<%= filme.id %>" class="filme-capa">
+                        <% if (filme.capaUrl) { %>
+                            <img src="<%= filme.capaUrl %>" alt="Capa de <%= filme.titulo %>">
+                        <% } else { %>
+                            <span class="capa-vazia"><i class="bi bi-camera-reels"></i><small>IFCine</small></span>
+                        <% } %>
+                        <span class="play-sobreposto"><i class="bi bi-play-fill"></i></span>
+                    </a>
+                    <div class="filme-conteudo">
+                        <span class="badge-genero"><%= filme.genero %></span>
+                        <h3 class="h5 mt-2 mb-1"><a href="/filmes/<%= filme.id %>"><%= filme.titulo %></a></h3>
+                        <p class="meta-filme"><%= filme.ano %> · <%= filme.duracao %> min<%= filme.edicao ? ' · ' + filme.edicao : '' %></p>
+                        <div class="avaliacao-resumo">
+                            <span class="estrelas"><i class="bi bi-star-fill"></i> <%= resumo ? resumo.media.toFixed(1) : '—' %></span>
+                            <small><%= resumo ? resumo.quantidade : 0 %> avaliação<%= resumo && resumo.quantidade === 1 ? '' : 'ões' %></small>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        <% } %>
+    </div>
+</section>
+
+<%- include('rodape.ejs') %>

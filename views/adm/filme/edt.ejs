@@ -1,0 +1,4 @@
+<%- include('../cabecalho.ejs', { tituloPagina: 'Editar filme' }) %>
+<div class="mb-4"><span class="eyebrow">Catálogo</span><h1 class="h2 mb-0">Editar filme</h1><p class="text-secondary">Atualize os dados de <%= filme.titulo %>.</p></div>
+<%- include('form.ejs', { acao: '/adm/filme/edt/' + filme.id, filme }) %>
+<%- include('../rodape.ejs') %>

@@ -1,0 +1,32 @@
+<%- include('../catalogo/cabecalho.ejs', { tituloPagina: administrativo ? 'Login administrativo' : 'Entrar' }) %>
+
+<section class="auth-section">
+    <div class="container py-5">
+        <div class="auth-card mx-auto">
+            <div class="auth-icon"><i class="bi <%= administrativo ? 'bi-shield-lock' : 'bi-person' %>"></i></div>
+            <span class="eyebrow"><%= administrativo ? 'Área protegida' : 'Bem-vindo de volta' %></span>
+            <h1 class="h2 mt-2"><%= administrativo ? 'Login administrativo' : 'Entre no IFCine' %></h1>
+            <p class="text-secondary"><%= administrativo ? 'Use uma conta com permissão de administrador.' : 'Entre para avaliar filmes e acessar seu histórico.' %></p>
+
+            <form action="<%= administrativo ? '/adm/login' : '/login' %>" method="post">
+                <div class="mb-3">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input id="email" type="email" name="email" value="<%= dados.email || '' %>" class="form-control" autocomplete="email" required>
+                </div>
+                <div class="mb-4">
+                    <label for="senha" class="form-label">Senha</label>
+                    <input id="senha" type="password" name="senha" class="form-control" autocomplete="current-password" required>
+                </div>
+                <button class="btn btn-ifcine w-100" type="submit">Entrar</button>
+            </form>
+
+            <% if (!administrativo) { %>
+                <p class="text-center text-secondary mt-4 mb-0">Ainda não tem conta? <a class="link-verde" href="/cadastro">Cadastre-se</a></p>
+            <% } else { %>
+                <p class="text-center mt-4 mb-0"><a class="link-verde" href="/login">Voltar ao login do usuário</a></p>
+            <% } %>
+        </div>
+    </div>
+</section>
+
+<%- include('../catalogo/rodape.ejs') %>

@@ -1,0 +1,23 @@
+<%- include('../cabecalho.ejs', { tituloPagina: 'Usuários' }) %>
+
+<div class="mb-4"><span class="eyebrow">Comunidade</span><h1 class="h2 mb-0">Gerenciar usuários</h1><p class="text-secondary">Ative ou desative contas e controle o acesso administrativo.</p></div>
+<form action="/adm/usuario/lst" method="get" class="busca-admin mb-4"><div class="input-group"><span class="input-group-text"><i class="bi bi-search"></i></span><input type="search" name="filtro" value="<%= filtro %>" class="form-control" placeholder="Buscar por nome ou e-mail"><button class="btn btn-ifcine" type="submit">Buscar</button></div></form>
+
+<div class="table-responsive painel-form p-0">
+    <table class="table table-dark table-hover align-middle mb-0">
+        <thead><tr><th>Usuário</th><th>Tipo</th><th>Status</th><th>Cadastro</th><th class="text-end">Ações</th></tr></thead>
+        <tbody>
+            <% for (const item of usuarios) { %>
+                <tr>
+                    <td><strong><%= item.nome %></strong><small class="d-block text-secondary"><%= item.email %></small></td>
+                    <td><span class="badge <%= item.tipo === 'admin' ? 'text-bg-warning' : 'text-bg-info' %>"><%= item.tipo %></span></td>
+                    <td><span class="badge <%= item.ativo ? 'text-bg-success' : 'text-bg-secondary' %>"><%= item.ativo ? 'Ativo' : 'Inativo' %></span></td>
+                    <td><%= new Date(item.dataCadastro).toLocaleDateString('pt-BR') %></td>
+                    <td><div class="d-flex flex-wrap justify-content-end gap-2"><form action="/adm/usuario/tipo/<%= item.id %>" method="post"><button class="btn btn-outline-light btn-sm" type="submit" <%= item.id === usuarioLogado.id ? 'disabled' : '' %>>Alterar tipo</button></form><form action="/adm/usuario/ativo/<%= item.id %>" method="post"><button class="btn btn-outline-warning btn-sm" type="submit" <%= item.id === usuarioLogado.id ? 'disabled' : '' %>><%= item.ativo ? 'Desativar' : 'Ativar' %></button></form></div></td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+
+<%- include('../rodape.ejs') %>

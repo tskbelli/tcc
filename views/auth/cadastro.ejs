@@ -1,0 +1,37 @@
+<%- include('../catalogo/cabecalho.ejs', { tituloPagina: 'Cadastro' }) %>
+
+<section class="auth-section">
+    <div class="container py-5">
+        <div class="auth-card mx-auto">
+            <div class="auth-icon"><i class="bi bi-person-plus"></i></div>
+            <span class="eyebrow">Faça parte</span>
+            <h1 class="h2 mt-2">Crie sua conta</h1>
+            <p class="text-secondary">Use seus dados para avaliar os filmes do catálogo.</p>
+
+            <form action="/cadastro" method="post">
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome</label>
+                    <input id="nome" type="text" name="nome" value="<%= dados.nome || '' %>" class="form-control" minlength="2" maxlength="80" autocomplete="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input id="email" type="email" name="email" value="<%= dados.email || '' %>" class="form-control" autocomplete="email" required>
+                </div>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label for="senha" class="form-label">Senha</label>
+                        <input id="senha" type="password" name="senha" class="form-control" minlength="6" autocomplete="new-password" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="confirmarSenha" class="form-label">Repita a senha</label>
+                        <input id="confirmarSenha" type="password" name="confirmarSenha" class="form-control" minlength="6" autocomplete="new-password" required>
+                    </div>
+                </div>
+                <button class="btn btn-ifcine w-100" type="submit">Cadastrar</button>
+            </form>
+            <p class="text-center text-secondary mt-4 mb-0">Já tem conta? <a class="link-verde" href="/login">Entre aqui</a></p>
+        </div>
+    </div>
+</section>
+
+<%- include('../catalogo/rodape.ejs') %>

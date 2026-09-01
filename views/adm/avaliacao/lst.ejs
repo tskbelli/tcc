@@ -1,0 +1,23 @@
+<%- include('../cabecalho.ejs', { tituloPagina: 'Avaliações' }) %>
+
+<div class="mb-4"><span class="eyebrow">Moderação</span><h1 class="h2 mb-0">Avaliações</h1><p class="text-secondary">Visualize os comentários e oculte conteúdos quando necessário.</p></div>
+
+<% if (!avaliacoes.length) { %><div class="estado-vazio"><i class="bi bi-chat-square-text"></i><h3>Nenhuma avaliação registrada</h3></div><% } %>
+<div class="d-grid gap-3">
+    <% for (const avaliacao of avaliacoes) { %>
+        <article class="moderacao-card">
+            <div class="flex-grow-1">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-2"><strong><%= avaliacao.usuario.nome %></strong><span class="text-secondary">avaliou</span><a href="/filmes/<%= avaliacao.filme.id %>"><%= avaliacao.filme.titulo %></a><span class="badge <%= avaliacao.ativo ? 'text-bg-success' : 'text-bg-secondary' %>"><%= avaliacao.ativo ? 'Publicada' : 'Oculta' %></span></div>
+                <div class="estrelas mb-2" aria-label="<%= avaliacao.nota %> de 5 estrelas"><% for (let i = 1; i <= 5; i++) { %><i class="bi <%= i <= avaliacao.nota ? 'bi-star-fill' : 'bi-star' %>"></i><% } %></div>
+                <% if (avaliacao.comentario) { %><p class="mb-1"><%= avaliacao.comentario %></p><% } %>
+                <small class="text-secondary"><%= avaliacao.usuario.email %> · <%= new Date(avaliacao.updatedAt).toLocaleString('pt-BR') %></small>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <form action="/adm/avaliacao/ativo/<%= avaliacao.id %>" method="post"><button class="btn btn-outline-warning btn-sm" type="submit"><i class="bi <%= avaliacao.ativo ? 'bi-eye-slash' : 'bi-eye' %>"></i> <%= avaliacao.ativo ? 'Ocultar' : 'Publicar' %></button></form>
+                <form action="/adm/avaliacao/del/<%= avaliacao.id %>" method="post" onsubmit="return confirm('Excluir esta avaliação?');"><button class="btn btn-outline-danger btn-sm" type="submit"><i class="bi bi-trash"></i> Excluir</button></form>
+            </div>
+        </article>
+    <% } %>
+</div>
+
+<%- include('../rodape.ejs') %>

@@ -1,0 +1,34 @@
+<%- include('../cabecalho.ejs', { tituloPagina: 'Filmes' }) %>
+
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div><span class="eyebrow">Catálogo</span><h1 class="h2 mb-0">Filmes cadastrados</h1><p class="text-secondary mb-0">Edite o conteúdo e controle o que aparece para o usuário.</p></div>
+    <a class="btn btn-ifcine" href="/adm/filme/add"><i class="bi bi-plus-lg"></i> Novo filme</a>
+</div>
+
+<form action="/adm/filme/lst" method="get" class="busca-admin mb-4">
+    <div class="input-group"><span class="input-group-text"><i class="bi bi-search"></i></span><input type="search" name="filtro" value="<%= filtro %>" class="form-control" placeholder="Buscar pelo título"><button class="btn btn-ifcine" type="submit">Buscar</button></div>
+</form>
+
+<% if (!filmes.length) { %><div class="estado-vazio"><i class="bi bi-film"></i><h3>Nenhum filme cadastrado</h3><a class="btn btn-ifcine" href="/adm/filme/add">Cadastrar primeiro filme</a></div><% } %>
+
+<div class="row g-4">
+    <% for (const filme of filmes) { %>
+        <div class="col-12 col-md-6 col-xl-4">
+            <article class="admin-filme-card">
+                <div class="admin-filme-capa"><% if (filme.capaUrl) { %><img src="<%= filme.capaUrl %>" alt=""><% } else { %><i class="bi bi-camera-reels"></i><% } %></div>
+                <div class="flex-grow-1 min-w-0">
+                    <div class="d-flex justify-content-between gap-2"><span class="badge <%= filme.ativo ? 'text-bg-success' : 'text-bg-secondary' %>"><%= filme.ativo ? 'Ativo' : 'Inativo' %></span><small class="text-secondary"><%= filme.ano %></small></div>
+                    <h2 class="h5 mt-2 text-truncate"><%= filme.titulo %></h2>
+                    <p class="text-secondary small"><%= filme.genero %> · <%= filme.duracao %> min</p>
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <a class="btn btn-outline-light btn-sm" href="/adm/filme/edt/<%= filme.id %>"><i class="bi bi-pencil"></i> Editar</a>
+                        <form action="/adm/filme/ativo/<%= filme.id %>" method="post"><button class="btn btn-outline-warning btn-sm" type="submit"><i class="bi <%= filme.ativo ? 'bi-eye-slash' : 'bi-eye' %>"></i> <%= filme.ativo ? 'Desativar' : 'Ativar' %></button></form>
+                        <form action="/adm/filme/del/<%= filme.id %>" method="post" onsubmit="return confirm('Excluir este filme e todas as avaliações dele?');"><button class="btn btn-outline-danger btn-sm" type="submit"><i class="bi bi-trash"></i></button></form>
+                    </div>
+                </div>
+            </article>
+        </div>
+    <% } %>
+</div>
+
+<%- include('../rodape.ejs') %>
