@@ -1,38 +1,42 @@
-<form action="<%= acao %>" method="post" enctype="multipart/form-data" class="painel-form">
+<% const duracao = separarDuracao(filme); %>
+<form action="<%= acao %>" method="post" enctype="multipart/form-data" class="painel-form" id="form-filme">
     <div class="row g-3">
         <div class="col-md-8">
             <label for="titulo" class="form-label">Título *</label>
             <input id="titulo" type="text" name="titulo" value="<%= filme.titulo || '' %>" class="form-control" maxlength="150" required>
         </div>
         <div class="col-md-4">
-         <label for="genero" class="form-label">Gênero *</label>
-    <select id="genero" name="genero" class="form-select" required>
-        <option value="" disabled <%= !filme.genero ? 'selected' : '' %>>
-            Selecione um gênero
-        </option>
-        <option value="Ação" <%= filme.genero === 'Ação' ? 'selected' : '' %>>Ação</option>
-        <option value="Comédia" <%= filme.genero === 'Comédia' ? 'selected' : '' %>>Comédia</option>
-        <option value="Drama" <%= filme.genero === 'Drama' ? 'selected' : '' %>>Drama</option>
-        <option value="Terror" <%= filme.genero === 'Terror' ? 'selected' : '' %>>Terror</option>
-        <option value="Suspense" <%= filme.genero === 'Suspense' ? 'selected' : '' %>>Suspense</option>
-        <option value="Romance" <%= filme.genero === 'Romance' ? 'selected' : '' %>>Romance</option>
-        <option value="Ficção Científica" <%= filme.genero === 'Ficção Científica' ? 'selected' : '' %>>
-            Ficção Científica
-        </option>
-        <option value="Animação" <%= filme.genero === 'Animação' ? 'selected' : '' %>>Animação</option>
-    </select>
-    </div>
+            <label for="genero" class="form-label">Gênero *</label>
+            <select id="genero" name="genero" class="form-select" required>
+                <option value="" disabled <%= !filme.genero ? 'selected' : '' %>>Selecione um gênero</option>
+                <% for (const genero of generosPermitidos) { %>
+                    <option value="<%= genero %>" <%= filme.genero === genero ? 'selected' : '' %>><%= genero %></option>
+                <% } %>
+            </select>
+        </div>
         <div class="col-12">
             <label for="sinopse" class="form-label">Sinopse *</label>
             <textarea id="sinopse" name="sinopse" class="form-control" rows="5" minlength="10" maxlength="2000" required><%= filme.sinopse || '' %></textarea>
         </div>
         <div class="col-sm-4">
             <label for="ano" class="form-label">Ano *</label>
-            <input id="ano" type="number" name="ano" value="<%= filme.ano || new Date().getFullYear() %>" class="form-control" min="1895" max="2100" required>
+            <input id="ano" type="number" name="ano" value="<%= filme.ano ?? new Date().getFullYear() %>" class="form-control" min="1895" max="<%= new Date().getFullYear() %>" step="1" required>
         </div>
         <div class="col-sm-4">
-            <label for="duracao" class="form-label">Duração (minutos) *</label>
-            <input id="duracao" type="number" name="duracao" value="<%= filme.duracao || 5 %>" class="form-control" min="1" max="5" required>
+            <fieldset aria-describedby="ajuda-duracao">
+                <legend class="form-label fs-6">Duração *</legend>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <label for="minutos" class="form-label small">Minutos</label>
+                        <input id="minutos" type="number" name="minutos" value="<%= duracao.minutos %>" class="form-control" min="0" max="5" step="1" required>
+                    </div>
+                    <div class="col-6">
+                        <label for="segundos" class="form-label small">Segundos</label>
+                        <input id="segundos" type="number" name="segundos" value="<%= duracao.segundos %>" class="form-control" min="0" max="59" step="1" required>
+                    </div>
+                </div>
+                <div id="ajuda-duracao" class="form-text">De 0min01s a 5min00s.</div>
+            </fieldset>
         </div>
         <div class="col-sm-4">
             <label for="edicao" class="form-label">Edição/ano da gincana</label>
@@ -46,18 +50,15 @@
             <label for="link" class="form-label">Link externo para assistir *</label>
             <input id="link" type="url" name="link" value="<%= filme.link || '' %>" class="form-control" placeholder="https://drive.google.com/..." required>
         </div>
-        <div class="col-md-6">
+        <div class="col-12">
             <label for="capa" class="form-label">Arquivo da capa</label>
-            <input id="capa" type="file" name="capa" class="form-control" accept="image/jpeg,image/png,image/webp">
-            <div class="form-text">JPG, PNG ou WEBP, até 5 MB.</div>
+            <input id="capa" type="file" name="capa" class="form-control" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" aria-describedby="ajuda-capa">
+            <div id="ajuda-capa" class="form-text">JPG, JPEG, PNG ou WebP, até 5 MB. Ao editar, deixe vazio para manter a capa atual. Se houver erro no formulário, selecione o arquivo novamente.</div>
         </div>
-        <div class="col-md-6">
-            <label for="capaExterna" class="form-label">Ou URL da capa</label>
-            <input id="capaExterna" type="url" name="capaExterna" value="<%= filme.capaExterna || '' %>" class="form-control" placeholder="https://...">
+        <div class="col-12" id="capa-preview-container" <%= !filme.capaSrc ? 'hidden' : '' %>>
+            <span class="form-label d-block" id="capa-preview-label">Capa atual</span>
+            <img id="capa-preview" class="capa-admin-preview" <% if (filme.capaSrc) { %>src="<%= filme.capaSrc %>"<% } %> data-capa-atual="<%= filme.capaSrc || '' %>" alt="Prévia da capa">
         </div>
-        <% if (filme.capaUrl) { %>
-            <div class="col-12"><span class="form-label d-block">Capa atual</span><img class="capa-admin-preview" src="<%= filme.capaUrl %>" alt="Capa atual"></div>
-        <% } %>
         <div class="col-12">
             <div class="form-check form-switch">
                 <input id="ativo" type="checkbox" name="ativo" class="form-check-input" <%= filme.ativo !== false ? 'checked' : '' %>>
@@ -70,3 +71,4 @@
         <a class="btn btn-outline-light" href="/adm/filme/lst">Cancelar</a>
     </div>
 </form>
+<script src="/js/filme-form.js" defer></script>

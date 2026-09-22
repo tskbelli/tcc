@@ -1,0 +1,4 @@
+<%- include('../cabecalho.ejs', { tituloPagina: 'Editar edição' }) %>
+<div class="mb-4"><span class="eyebrow">Ganhadores da Gincana</span><h1 class="h2">Editar edição</h1><p class="text-secondary">Atualize o ano ou os vencedores desta gincana.</p></div>
+<%- include('form.ejs', { acao: '/adm/gincana/edt/' + edicao.id, edicao, filmes }) %>
+<%- include('../rodape.ejs') %>

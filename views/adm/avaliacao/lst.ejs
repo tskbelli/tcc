@@ -8,7 +8,7 @@
         <article class="moderacao-card">
             <div class="flex-grow-1">
                 <div class="d-flex flex-wrap align-items-center gap-2 mb-2"><strong><%= avaliacao.usuario.nome %></strong><span class="text-secondary">avaliou</span><a href="/filmes/<%= avaliacao.filme.id %>"><%= avaliacao.filme.titulo %></a><span class="badge <%= avaliacao.ativo ? 'text-bg-success' : 'text-bg-secondary' %>"><%= avaliacao.ativo ? 'Publicada' : 'Oculta' %></span></div>
-                <div class="estrelas mb-2" aria-label="<%= avaliacao.nota %> de 5 estrelas"><% for (let i = 1; i <= 5; i++) { %><i class="bi <%= i <= avaliacao.nota ? 'bi-star-fill' : 'bi-star' %>"></i><% } %></div>
+                <div class="mb-2"><%- include('../../partials/estrelas.ejs', { valor: avaliacao.nota }) %></div>
                 <% if (avaliacao.comentario) { %><p class="mb-1"><%= avaliacao.comentario %></p><% } %>
                 <small class="text-secondary"><%= avaliacao.usuario.email %> · <%= new Date(avaliacao.updatedAt).toLocaleString('pt-BR') %></small>
             </div>

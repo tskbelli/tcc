@@ -10,7 +10,7 @@ export default class AdminController {
                     Filme.countDocuments(),
                     Filme.countDocuments({ ativo: true }),
                     Usuario.countDocuments(),
-                    Avaliacao.countDocuments()
+                    Avaliacao.countDocuments({ duplicadaDe: null })
                 ]);
 
                 res.render('adm/index', { totais: { filmes, filmesAtivos, usuarios, avaliacoes } });

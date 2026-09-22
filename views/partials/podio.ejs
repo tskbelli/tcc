@@ -1,0 +1,36 @@
+<ol class="podio" aria-label="<%= mostrarAvaliacoes ? 'Pódio dos filmes mais bem avaliados' : 'Pódio dos ganhadores da gincana' %>">
+    <% for (const item of colocados) { const filme = item.filme; %>
+        <li class="podio-item podio-lugar-<%= item.posicao %>" value="<%= item.posicao %>" data-posicao="<%= item.posicao %>">
+            <article class="filme-card podio-card">
+                <div class="podio-posicao">
+                    <i class="bi <%= item.posicao === 1 ? 'bi-trophy-fill' : 'bi-award' %>" aria-hidden="true"></i>
+                    <strong><%= item.posicao %>º lugar</strong>
+                </div>
+                <% if (filme) { %>
+                    <a href="/filmes/<%= filme.id %>" class="filme-capa">
+                        <% if (filme.capaSrc) { %>
+                            <img src="<%= filme.capaSrc %>" alt="Capa de <%= filme.titulo %>" loading="lazy">
+                        <% } else { %>
+                            <span class="capa-vazia"><i class="bi bi-camera-reels" aria-hidden="true"></i><small>IFCine</small></span>
+                        <% } %>
+                        <span class="play-sobreposto"><i class="bi bi-play-fill" aria-hidden="true"></i></span>
+                    </a>
+                    <div class="filme-conteudo">
+                        <span class="badge-genero"><%= filme.genero %></span>
+                        <h3 class="h5 mt-2 mb-2"><a href="/filmes/<%= filme.id %>"><%= filme.titulo %></a></h3>
+                        <p class="meta-filme"><%= filme.ano %> · <%= formatarDuracao(filme) %></p>
+                        <% if (mostrarAvaliacoes) { %>
+                            <div class="avaliacao-resumo flex-wrap gap-2">
+                                <%- include('estrelas.ejs', { valor: item.media }) %>
+                                <small><%= item.quantidade %> <%= item.quantidade === 1 ? 'avaliação' : 'avaliações' %></small>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } else { %>
+                    <div class="filme-capa"><span class="capa-vazia"><i class="bi bi-camera-reels" aria-hidden="true"></i><small>IFCine</small></span></div>
+                    <div class="filme-conteudo"><h3 class="h5">Filme indisponível</h3><p class="text-secondary small mb-0">Esta produção está fora do catálogo.</p></div>
+                <% } %>
+            </article>
+        </li>
+    <% } %>
+</ol>

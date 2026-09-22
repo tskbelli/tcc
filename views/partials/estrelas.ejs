@@ -1,0 +1,11 @@
+<span class="nota-conjunto">
+    <span class="estrelas estrelas-nota" role="img" aria-label="<%= valor > 0 ? formatarNota(valor) + ' de 5 estrelas' : 'Sem avaliações' %>">
+        <% for (const percentual of preenchimentoEstrelas(valor)) { %>
+            <span class="estrela-simbolo" aria-hidden="true">
+                <i class="bi bi-star estrela-vazia"></i>
+                <span class="estrela-cheia" style="width: <%= percentual %>%"><i class="bi bi-star-fill"></i></span>
+            </span>
+        <% } %>
+    </span>
+    <span class="nota-valor"><%= formatarNota(valor) %><%= valor > 0 ? ' / 5' : '' %></span>
+</span>

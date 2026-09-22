@@ -1,0 +1,28 @@
+<%- include('../cabecalho.ejs', { tituloPagina: 'Ganhadores da Gincana' }) %>
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div><span class="eyebrow">Destaques</span><h1 class="h2">Ganhadores da Gincana</h1><p class="text-secondary mb-0">Gerencie os três vencedores de cada edição.</p></div>
+    <div class="d-flex flex-wrap gap-2"><a href="/destaques#gincana" class="btn btn-outline-light">Ver pódios</a><a href="/adm/gincana/add" class="btn btn-ifcine"><i class="bi bi-plus-lg"></i> Nova edição</a></div>
+</div>
+<% if (!edicoes.length) { %>
+    <div class="estado-vazio"><i class="bi bi-trophy"></i><h2 class="h4">Nenhuma edição cadastrada</h2><p>Adicione um ano e selecione os três vencedores.</p><a href="/adm/gincana/add" class="btn btn-ifcine">Cadastrar primeira edição</a></div>
+<% } %>
+<div class="row g-4">
+    <% for (const edicao of edicoes) { %>
+        <div class="col-12 col-lg-6">
+            <article class="painel-form h-100">
+                <h2 class="h4 mb-3">Gincana <%= edicao.ano %></h2>
+                <ol class="lista-ganhadores">
+                    <% for (const [indice, campo] of ['primeiro', 'segundo', 'terceiro'].entries()) { const filme = edicao[campo]; %>
+                        <li><strong><%= indice + 1 %>º</strong><span><%= filme ? filme.titulo : 'Filme indisponível' %><% if (filme && !filme.ativo) { %><small class="text-secondary"> (desativado)</small><% } %></span></li>
+                    <% } %>
+                </ol>
+                <div class="d-flex flex-wrap gap-2 mt-4">
+                    <a href="/adm/gincana/edt/<%= edicao.id %>" class="btn btn-outline-light btn-sm"><i class="bi bi-pencil"></i> Editar</a>
+                    <a href="/destaques?ano=<%= edicao.ano %>#gincana" class="btn btn-outline-light btn-sm">Ver pódio</a>
+                    <form action="/adm/gincana/del/<%= edicao.id %>" method="post" onsubmit="return confirm('Excluir esta edição da gincana? Os filmes serão mantidos.');"><button class="btn btn-outline-danger btn-sm" type="submit"><i class="bi bi-trash"></i> Excluir edição</button></form>
+                </div>
+            </article>
+        </div>
+    <% } %>
+</div>
+<%- include('../rodape.ejs') %>

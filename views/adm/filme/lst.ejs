@@ -15,11 +15,11 @@
     <% for (const filme of filmes) { %>
         <div class="col-12 col-md-6 col-xl-4">
             <article class="admin-filme-card">
-                <div class="admin-filme-capa"><% if (filme.capaUrl) { %><img src="<%= filme.capaUrl %>" alt=""><% } else { %><i class="bi bi-camera-reels"></i><% } %></div>
+                <div class="admin-filme-capa"><% if (filme.capaSrc) { %><img src="<%= filme.capaSrc %>" alt=""><% } else { %><i class="bi bi-camera-reels"></i><% } %></div>
                 <div class="flex-grow-1 min-w-0">
                     <div class="d-flex justify-content-between gap-2"><span class="badge <%= filme.ativo ? 'text-bg-success' : 'text-bg-secondary' %>"><%= filme.ativo ? 'Ativo' : 'Inativo' %></span><small class="text-secondary"><%= filme.ano %></small></div>
                     <h2 class="h5 mt-2 text-truncate"><%= filme.titulo %></h2>
-                    <p class="text-secondary small"><%= filme.genero %> · <%= filme.duracao %> min</p>
+                    <p class="text-secondary small"><%= filme.genero %> · <%= formatarDuracao(filme) %></p>
                     <div class="d-flex flex-wrap gap-2 mt-3">
                         <a class="btn btn-outline-light btn-sm" href="/adm/filme/edt/<%= filme.id %>"><i class="bi bi-pencil"></i> Editar</a>
                         <form action="/adm/filme/ativo/<%= filme.id %>" method="post"><button class="btn btn-outline-warning btn-sm" type="submit"><i class="bi <%= filme.ativo ? 'bi-eye-slash' : 'bi-eye' %>"></i> <%= filme.ativo ? 'Desativar' : 'Ativar' %></button></form>

@@ -1,5 +1,6 @@
 import Usuario from '../models/usuario.js';
 import Avaliacao from '../models/avaliacao.js';
+import { avaliacoesUnicas, ordemAvaliacoes } from '../utils/avaliacoes.js';
 
 export default class UsuarioController {
     constructor() {
@@ -7,9 +8,9 @@ export default class UsuarioController {
             try {
                 const [usuario, avaliacoes] = await Promise.all([
                     Usuario.findById(req.session.usuario.id),
-                    Avaliacao.find({ usuario: req.session.usuario.id })
+                    Avaliacao.find({ usuario: req.session.usuario.id, duplicadaDe: null })
                         .populate('filme')
-                        .sort({ updatedAt: -1 })
+                        .sort(ordemAvaliacoes)
                 ]);
 
                 if (!usuario) {
@@ -18,7 +19,7 @@ export default class UsuarioController {
 
                 res.render('usuario/perfil', {
                     perfil: usuario,
-                    avaliacoes: avaliacoes.filter((avaliacao) => avaliacao.filme)
+                    avaliacoes: avaliacoesUnicas(avaliacoes).filter((avaliacao) => avaliacao.filme)
                 });
             } catch (erro) {
                 console.error(erro);

@@ -24,12 +24,12 @@
         <% for (const avaliacao of avaliacoes) { %>
             <article class="historico-card">
                 <div class="historico-capa">
-                    <% if (avaliacao.filme.capaUrl) { %><img src="<%= avaliacao.filme.capaUrl %>" alt=""><% } else { %><i class="bi bi-camera-reels"></i><% } %>
+                    <% if (avaliacao.filme.capaSrc) { %><img src="<%= avaliacao.filme.capaSrc %>" alt=""><% } else { %><i class="bi bi-camera-reels"></i><% } %>
                 </div>
                 <div class="flex-grow-1">
                     <div class="d-flex flex-wrap justify-content-between gap-2">
                         <h3 class="h5 mb-1"><a href="/filmes/<%= avaliacao.filme.id %>"><%= avaliacao.filme.titulo %></a></h3>
-                        <span class="estrelas"><i class="bi bi-star-fill"></i> <%= avaliacao.nota %>/5</span>
+                        <%- include('../partials/estrelas.ejs', { valor: avaliacao.nota }) %>
                     </div>
                     <p class="text-secondary small mb-2">Atualizada em <%= new Date(avaliacao.updatedAt).toLocaleDateString('pt-BR') %> · <%= avaliacao.ativo ? 'Publicada' : 'Ocultada pela moderação' %></p>
                     <% if (avaliacao.comentario) { %><p class="mb-0"><%= avaliacao.comentario %></p><% } %>

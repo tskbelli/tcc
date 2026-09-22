@@ -13,8 +13,17 @@ import avaliacaoRoutes from './routes/AvaliacaoRoutes.js';
 import usuarioRoutes from './routes/UsuarioRoutes.js';
 import filmeRoutes from './routes/FilmeRoutes.js';
 import adminRoutes from './routes/AdminRoutes.js';
+import EdicaoGincana from './models/edicaoGincana.js';
+import { prepararAvaliacoes } from './config/avaliacoes.js';
 
 await conectarBanco();
+// Garante o índice de ano único antes de receber cadastros de edições.
+await EdicaoGincana.init();
+// Trata possíveis duplicatas antigas antes de garantir uma avaliação por usuário/filme.
+const preparoAvaliacoes = await prepararAvaliacoes();
+if (preparoAvaliacoes.preservadas) {
+    console.log(`${preparoAvaliacoes.preservadas} avaliações duplicadas antigas preservadas como histórico.`);
+}
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);

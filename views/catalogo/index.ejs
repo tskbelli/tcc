@@ -2,8 +2,8 @@
 
 <section class="catalogo-topo">
     <div class="container py-5">
-        <div class="row align-items-end g-4">
-            <div class="col-lg-6">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-6 catalogo-identidade">
                 <span class="eyebrow"></span>
                 <h1 class="visually-hidden">IFCine</h1>
                 <img class="logo-principal mt-2" src="/img/logo-principal.jpg" alt="IFCine">
@@ -12,14 +12,14 @@
             <div class="col-lg-6">
                 <form action="/" method="get" class="busca-catalogo">
                     <div class="row g-2">
-                        <div class="col-md-7">
+                        <div class="col-12">
                             <label class="visually-hidden" for="busca">Título do filme</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-search"></i></span>
                                 <input id="busca" type="search" name="busca" value="<%= busca %>" class="form-control" placeholder="Pesquisar pelo título">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-sm-5">
                             <label class="visually-hidden" for="genero">Gênero</label>
                             <select id="genero" name="genero" class="form-select">
                                 <option value="">Todos os gêneros</option>
@@ -28,7 +28,16 @@
                                 <% } %>
                             </select>
                         </div>
-                        <div class="col-md-2 d-grid"><button class="btn btn-ifcine" type="submit">Buscar</button></div>
+                        <div class="col-sm-4">
+                            <label class="visually-hidden" for="ano">Ano do filme</label>
+                            <select id="ano" name="ano" class="form-select">
+                                <option value="">Todos os anos</option>
+                                <% for (const item of anos) { %>
+                                    <option value="<%= item %>" <%= ano === String(item) ? 'selected' : '' %>><%= item %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div class="col-sm-3 d-grid"><button class="btn btn-ifcine" type="submit">Buscar</button></div>
                     </div>
                 </form>
             </div>
@@ -38,18 +47,15 @@
 
 <section class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <span class="eyebrow">Em cartaz</span>
-            <h2 class="h3 mb-0"><%= filmes.length %> filme<%= filmes.length === 1 ? '' : 's' %> encontrado<%= filmes.length === 1 ? '' : 's' %></h2>
-        </div>
-        <% if (busca || genero) { %><a class="link-verde" href="/">Limpar filtros</a><% } %>
+        <h2 class="titulo-cartaz mb-0">Filmes em cartaz</h2>
+        <% if (busca || genero || ano) { %><a class="link-verde" href="/">Limpar filtros</a><% } %>
     </div>
 
     <% if (!filmes.length) { %>
         <div class="estado-vazio">
             <i class="bi bi-camera-reels"></i>
             <h3>Nenhum filme encontrado</h3>
-            <p>Tente outro título ou escolha um gênero diferente.</p>
+            <p>Tente outro título, gênero ou ano.</p>
         </div>
     <% } %>
 
@@ -58,8 +64,8 @@
             <div class="col-12 col-sm-6 col-lg-3">
                 <article class="filme-card h-100">
                     <a href="/filmes/<%= filme.id %>" class="filme-capa">
-                        <% if (filme.capaUrl) { %>
-                            <img src="<%= filme.capaUrl %>" alt="Capa de <%= filme.titulo %>">
+                        <% if (filme.capaSrc) { %>
+                            <img src="<%= filme.capaSrc %>" alt="Capa de <%= filme.titulo %>">
                         <% } else { %>
                             <span class="capa-vazia"><i class="bi bi-camera-reels"></i><small>IFCine</small></span>
                         <% } %>
@@ -68,10 +74,10 @@
                     <div class="filme-conteudo">
                         <span class="badge-genero"><%= filme.genero %></span>
                         <h3 class="h5 mt-2 mb-1"><a href="/filmes/<%= filme.id %>"><%= filme.titulo %></a></h3>
-                        <p class="meta-filme"><%= filme.ano %> · <%= filme.duracao %> min<%= filme.edicao ? ' · ' + filme.edicao : '' %></p>
+                        <p class="meta-filme"><%= filme.ano %> · <%= formatarDuracao(filme) %><%= filme.edicao ? ' · ' + filme.edicao : '' %></p>
                         <div class="avaliacao-resumo">
-                            <span class="estrelas"><i class="bi bi-star-fill"></i> <%= resumo ? resumo.media.toFixed(1) : '—' %></span>
-                            <small><%= resumo ? resumo.quantidade : 0 %> avaliação<%= resumo && resumo.quantidade === 1 ? '' : 'ões' %></small>
+                            <%- include('../partials/estrelas.ejs', { valor: resumo ? resumo.media : 0 }) %>
+                            <small><%= resumo ? resumo.quantidade : 0 %> <%= resumo && resumo.quantidade === 1 ? 'avaliação' : 'avaliações' %></small>
                         </div>
                     </div>
                 </article>

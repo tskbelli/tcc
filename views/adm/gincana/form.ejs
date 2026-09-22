@@ -1,0 +1,32 @@
+<div id="aviso-filmes-ano" class="alert alert-warning" <%= filmes.length >= 3 ? 'hidden' : '' %>>Cadastre pelo menos três filmes do ano da edição para montar o pódio.</div>
+<% if (edicao.id && ['primeiro', 'segundo', 'terceiro'].some((campo) => edicao[campo] && !filmes.some((filme) => filme.id === String(edicao[campo])))) { %>
+    <div class="alert alert-warning">Esta edição possui um vencedor que não pertence ao ano informado ou está indisponível. Selecione os filmes desse ano para atualizar o pódio.</div>
+<% } %>
+<form action="<%= acao %>" method="post" class="painel-form" id="form-gincana">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <label for="ano-edicao" class="form-label">Ano da edição *</label>
+            <input id="ano-edicao" name="ano" type="number" class="form-control" min="1895" max="<%= new Date().getFullYear() %>" step="1" value="<%= edicao.ano ?? '' %>" required>
+        </div>
+        <div class="col-12">
+            <p class="text-secondary mb-1">Selecione três filmes diferentes do mesmo ano da edição. Filmes desativados aparecem como indisponíveis no pódio público.</p>
+            <p id="estado-filmes-ano" class="form-text mb-0" role="status" aria-live="polite"><%= filmes.length ? 'Mostrando filmes de ' + edicao.ano + '.' : 'Nenhum pódio completo disponível para este ano.' %></p>
+        </div>
+        <% for (const [indice, campo] of ['primeiro', 'segundo', 'terceiro'].entries()) { %>
+            <div class="col-md-4">
+                <label for="<%= campo %>" class="form-label"><%= indice + 1 %>º lugar *</label>
+                <select id="<%= campo %>" name="<%= campo %>" class="form-select" data-colocacao required <%= !filmes.length ? 'disabled' : '' %>>
+                    <option value="">Selecione um filme</option>
+                    <% for (const filme of filmes) { %>
+                        <option value="<%= filme.id %>" <%= String(edicao[campo] || '') === filme.id ? 'selected' : '' %>><%= filme.titulo %> (<%= filme.ano %>)<%= !filme.ativo ? ' — desativado' : '' %></option>
+                    <% } %>
+                </select>
+            </div>
+        <% } %>
+    </div>
+    <div class="d-flex flex-wrap gap-2 mt-4">
+        <button id="salvar-edicao" type="submit" class="btn btn-ifcine" <%= filmes.length < 3 ? 'disabled' : '' %>><i class="bi bi-check-lg"></i> Salvar edição</button>
+        <a href="/adm/gincana/lst" class="btn btn-outline-light">Cancelar</a>
+    </div>
+</form>
+<script src="/js/gincana-form.js" defer></script>

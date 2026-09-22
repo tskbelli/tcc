@@ -1,0 +1,71 @@
+<%- include('cabecalho.ejs', { tituloPagina: 'Destaques' }) %>
+
+<section class="catalogo-topo">
+    <div class="container py-5 text-center">
+        <span class="eyebrow">IFCine</span>
+        <h1 class="display-5 fw-bold mt-2">Destaques</h1>
+        <p class="text-secondary mb-4">Os favoritos do público e os curtas premiados na gincana.</p>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <a class="btn btn-ifcine" href="#mais-avaliados">Mais bem avaliados</a>
+            <a class="btn btn-outline-light" href="#gincana">Ganhadores da Gincana</a>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+    <section id="mais-avaliados" class="destaques-secao" aria-labelledby="titulo-ranking">
+        <div class="mb-4">
+            <span class="eyebrow">Escolha do público</span>
+            <h2 id="titulo-ranking" class="h3">Filmes mais bem avaliados</h2>
+            <p class="text-secondary">Ranking pela média das estrelas. Em caso de empate, vence quem tem mais avaliações; persistindo, vale a ordem alfabética.</p>
+        </div>
+        <% if (ranking.length) { %>
+            <%- include('../partials/podio.ejs', { colocados: ranking, mostrarAvaliacoes: true }) %>
+            <% if (ranking.length < 3) { %>
+                <p class="text-secondary text-center mt-3">O pódio será completado quando mais filmes receberem avaliações.</p>
+            <% } %>
+        <% } else { %>
+            <div class="estado-vazio compacto">
+                <i class="bi bi-star" aria-hidden="true"></i>
+                <h3 class="h5">O ranking começa com a primeira avaliação</h3>
+                <p>Explore o catálogo e deixe suas estrelas.</p>
+                <a href="/" class="btn btn-ifcine">Ver catálogo</a>
+            </div>
+        <% } %>
+    </section>
+
+    <section id="gincana" class="destaques-secao mt-5 pt-4" aria-labelledby="titulo-gincana">
+        <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+            <div>
+                <span class="eyebrow">Curtas premiados</span>
+                <h2 id="titulo-gincana" class="h3 mb-0">Ganhadores da Gincana</h2>
+            </div>
+            <% if (anos.length) { %>
+                <form action="/destaques#gincana" method="get" class="filtro-gincana">
+                    <label for="ano-gincana" class="form-label">Edição/ano</label>
+                    <div class="d-flex gap-2">
+                        <select id="ano-gincana" name="ano" class="form-select" required>
+                            <% if (ano && !anos.includes(ano)) { %><option value="<%= ano %>" selected><%= ano %> (sem edição)</option><% } %>
+                            <% for (const item of anos) { %>
+                                <option value="<%= item %>" <%= ano === item ? 'selected' : '' %>>Gincana <%= item %></option>
+                            <% } %>
+                        </select>
+                        <button type="submit" class="btn btn-ifcine">Mostrar</button>
+                    </div>
+                </form>
+            <% } %>
+        </div>
+        <% if (edicao) { %>
+            <h3 class="h4 text-center mb-4">Gincana <%= edicao.ano %></h3>
+            <%- include('../partials/podio.ejs', { colocados: ganhadores, mostrarAvaliacoes: false }) %>
+        <% } else { %>
+            <div class="estado-vazio compacto">
+                <i class="bi bi-trophy" aria-hidden="true"></i>
+                <h3 class="h5"><%= anos.length ? 'Nenhuma edição encontrada para esse ano' : 'As próximas premiações aparecem aqui' %></h3>
+                <p class="mb-0"><%= anos.length ? 'Selecione outra edição para ver os ganhadores.' : 'Os vencedores serão exibidos após o cadastro pela administração.' %></p>
+            </div>
+        <% } %>
+    </section>
+</div>
+
+<%- include('rodape.ejs') %>

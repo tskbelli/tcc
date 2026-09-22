@@ -1,0 +1,4 @@
+<%- include('../cabecalho.ejs', { tituloPagina: 'Nova edição' }) %>
+<div class="mb-4"><span class="eyebrow">Ganhadores da Gincana</span><h1 class="h2">Cadastrar edição</h1><p class="text-secondary">Selecione os três curtas premiados. O pódio será publicado em Destaques.</p></div>
+<%- include('form.ejs', { acao: '/adm/gincana/add', edicao, filmes }) %>
+<%- include('../rodape.ejs') %>

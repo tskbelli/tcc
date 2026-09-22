@@ -5,8 +5,8 @@
         <div class="row g-5 align-items-center">
             <div class="col-md-4 col-lg-3">
                 <div class="detalhe-capa">
-                    <% if (filme.capaUrl) { %>
-                        <img src="<%= filme.capaUrl %>" alt="Capa de <%= filme.titulo %>">
+                    <% if (filme.capaSrc) { %>
+                        <img src="<%= filme.capaSrc %>" alt="Capa de <%= filme.titulo %>">
                     <% } else { %>
                         <span class="capa-vazia"><i class="bi bi-camera-reels"></i><small>IFCine</small></span>
                     <% } %>
@@ -15,11 +15,11 @@
             <div class="col-md-8 col-lg-9">
                 <span class="badge-genero"><%= filme.genero %></span>
                 <h1 class="display-4 fw-bold mt-3"><%= filme.titulo %></h1>
-                <p class="meta-filme fs-6"><%= filme.ano %> · <%= filme.duracao %> min<%= filme.diretor ? ' · Direção: ' + filme.diretor : '' %><%= filme.edicao ? ' · ' + filme.edicao : '' %></p>
+                <p class="meta-filme fs-6"><%= filme.ano %> · <%= formatarDuracao(filme) %><%= filme.diretor ? ' · Direção: ' + filme.diretor : '' %><%= filme.edicao ? ' · ' + filme.edicao : '' %></p>
                 <p class="sinopse"><%= filme.sinopse %></p>
                 <div class="d-flex flex-wrap align-items-center gap-3 mt-4">
                     <a class="btn btn-ifcine btn-lg" href="<%= filme.link %>" target="_blank" rel="noopener noreferrer"><i class="bi bi-play-fill"></i> Assistir</a>
-                    <div class="nota-grande"><span><i class="bi bi-star-fill"></i> <%= media ? media.toFixed(1) : '—' %></span><small><%= quantidade %> avaliação<%= quantidade === 1 ? '' : 'ões' %></small></div>
+                    <div class="nota-grande"><%- include('../partials/estrelas.ejs', { valor: media }) %><small><%= quantidade %> <%= quantidade === 1 ? 'avaliação' : 'avaliações' %></small></div>
                 </div>
             </div>
         </div>
@@ -32,22 +32,29 @@
             <div class="painel-form sticky-lg-top">
                 <h2 class="h4"><%= avaliacaoUsuario ? 'Atualize sua avaliação' : 'Avalie este filme' %></h2>
                 <% if (usuarioLogado) { %>
+                    <% if (avaliacaoUsuario) { %>
+                        <p class="text-secondary">Você já avaliou este filme com <strong><%= formatarNota(avaliacaoUsuario.nota) %> estrelas</strong>. Ao salvar, sua avaliação será atualizada.</p>
+                    <% } %>
                     <form action="/filmes/<%= filme.id %>/avaliar" method="post">
-                        <fieldset class="mb-3">
+                        <fieldset class="mb-3" aria-describedby="ajuda-estrelas">
                             <legend class="form-label">Sua nota</legend>
                             <div class="star-rating">
-                                <% for (let nota = 5; nota >= 1; nota--) { %>
-                                    <input type="radio" id="estrela<%= nota %>" name="nota" value="<%= nota %>" <%= avaliacaoUsuario && avaliacaoUsuario.nota === nota ? 'checked' : '' %> required>
-                                    <label for="estrela<%= nota %>" title="<%= nota %> estrela<%= nota === 1 ? '' : 's' %>">★</label>
+                                <% for (let metade = 10; metade >= 1; metade--) { const nota = metade / 2; %>
+                                    <input type="radio" id="estrela<%= metade %>" name="nota" value="<%= nota %>" aria-label="<%= formatarNota(nota) %> <%= nota === 1 ? 'estrela' : 'estrelas' %>" <%= avaliacaoUsuario && avaliacaoUsuario.nota === nota ? 'checked' : '' %> required>
+                                    <label class="<%= metade % 2 ? 'metade-esquerda' : 'metade-direita' %>" for="estrela<%= metade %>" title="<%= formatarNota(nota) %> estrelas">
+                                        <span class="icone-vazio" aria-hidden="true">☆</span><span class="icone-cheio" aria-hidden="true">★</span>
+                                    </label>
                                 <% } %>
                             </div>
+                            <output id="nota-selecionada" class="d-block small estrelas mt-2" aria-live="polite"><%= avaliacaoUsuario ? 'Sua nota: ' + formatarNota(avaliacaoUsuario.nota) + ' / 5' : 'Escolha sua nota' %></output>
+                            <div id="ajuda-estrelas" class="form-text">Toque na metade esquerda para meia estrela e na direita para uma inteira. Pelo teclado, use as setas.</div>
                         </fieldset>
                         <div class="mb-3">
                             <label for="comentario" class="form-label">Comentário (opcional)</label>
                             <textarea id="comentario" name="comentario" class="form-control" rows="5" maxlength="800" placeholder="Conte o que achou"><%= avaliacaoUsuario ? avaliacaoUsuario.comentario : '' %></textarea>
                             <div class="form-text">Máximo de 800 caracteres.</div>
                         </div>
-                        <button class="btn btn-ifcine w-100" type="submit">Salvar avaliação</button>
+                        <button class="btn btn-ifcine w-100" type="submit"><%= avaliacaoUsuario ? 'Atualizar avaliação' : 'Salvar avaliação' %></button>
                     </form>
                 <% } else { %>
                     <p class="text-secondary">Entre na sua conta para dar uma nota e escrever um comentário.</p>
@@ -67,7 +74,7 @@
                 <% for (const avaliacao of avaliacoes) { %>
                     <article class="review-card">
                         <div class="d-flex justify-content-between gap-3">
-                            <div><strong><%= avaliacao.usuario.nome %></strong><div class="estrelas" aria-label="<%= avaliacao.nota %> de 5 estrelas"><% for (let i = 1; i <= 5; i++) { %><i class="bi <%= i <= avaliacao.nota ? 'bi-star-fill' : 'bi-star' %>"></i><% } %></div></div>
+                            <div><strong><%= avaliacao.usuario.nome %></strong><div><%- include('../partials/estrelas.ejs', { valor: avaliacao.nota }) %></div></div>
                             <small class="text-secondary"><%= new Date(avaliacao.updatedAt).toLocaleDateString('pt-BR') %></small>
                         </div>
                         <% if (avaliacao.comentario) { %><p class="mb-0 mt-3"><%= avaliacao.comentario %></p><% } %>
@@ -78,4 +85,5 @@
     </div>
 </section>
 
+<script src="/js/avaliacao-form.js" defer></script>
 <%- include('rodape.ejs') %>

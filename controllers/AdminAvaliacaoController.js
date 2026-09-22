@@ -1,15 +1,16 @@
 import Avaliacao from '../models/avaliacao.js';
+import { avaliacoesUnicas, ordemAvaliacoes } from '../utils/avaliacoes.js';
 
 export default class AdminAvaliacaoController {
     constructor(caminhoBase = 'adm/avaliacao/') {
         this.list = async (req, res) => {
             try {
-                const avaliacoes = await Avaliacao.find()
+                const avaliacoes = await Avaliacao.find({ duplicadaDe: null })
                     .populate('usuario', 'nome email')
                     .populate('filme', 'titulo')
-                    .sort({ updatedAt: -1 });
+                    .sort(ordemAvaliacoes);
                 res.render(caminhoBase + 'lst', {
-                    avaliacoes: avaliacoes.filter((avaliacao) => avaliacao.usuario && avaliacao.filme)
+                    avaliacoes: avaliacoesUnicas(avaliacoes).filter((avaliacao) => avaliacao.usuario && avaliacao.filme)
                 });
             } catch (erro) {
                 console.error(erro);
@@ -19,7 +20,7 @@ export default class AdminAvaliacaoController {
 
         this.alternar = async (req, res) => {
             try {
-                const avaliacao = await Avaliacao.findById(req.params.id);
+                const avaliacao = await Avaliacao.findOne({ _id: req.params.id, duplicadaDe: null });
                 if (avaliacao) {
                     avaliacao.ativo = !avaliacao.ativo;
                     await avaliacao.save();
@@ -34,7 +35,7 @@ export default class AdminAvaliacaoController {
 
         this.del = async (req, res) => {
             try {
-                await Avaliacao.findByIdAndDelete(req.params.id);
+                await Avaliacao.findOneAndDelete({ _id: req.params.id, duplicadaDe: null });
                 req.session.mensagem = { tipo: 'success', texto: 'Avaliação excluída.' };
             } catch (erro) {
                 console.error(erro);
